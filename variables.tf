@@ -55,3 +55,7 @@ variable "api_access_cidr" {
   default     = "0.0.0.0/0"
 }
 
+variable "env" {
+  description = "Environment"
+  default = "dev"
+}
