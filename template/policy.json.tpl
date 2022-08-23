@@ -18,7 +18,14 @@
                 "route53:ListHostedZonesByName",
                 "route53:ChangeResourceRecordSets",
                 "route53:ListResourceRecordSets",
-                "route53:GetChange"
+                "route53:GetChange",
+                "s3:ListBucket",
+                "s3:ListAllMyBuckets",
+                "s3:GetObject*",
+                "s3:GetBucket*"
+                "ssm:GetParameter",
+                "ssm:GetParameters",
+                "ssm:GetParametersByPath"
                 ],
             "Resource": "*"
         }
