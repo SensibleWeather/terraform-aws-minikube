@@ -59,3 +59,8 @@ variable "env" {
   description = "Environment"
   default = "dev"
 }
+
+variable ingress_security_group_id {
+  description = "ID of the security group for ingress"
+  default = null
+}
