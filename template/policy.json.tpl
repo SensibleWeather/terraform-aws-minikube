@@ -22,7 +22,7 @@
                 "s3:ListBucket",
                 "s3:ListAllMyBuckets",
                 "s3:GetObject*",
-                "s3:GetBucket*"
+                "s3:GetBucket*",
                 "ssm:GetParameter",
                 "ssm:GetParameters",
                 "ssm:GetParametersByPath"
