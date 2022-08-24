@@ -50,12 +50,12 @@ resource "aws_security_group" "minikube" {
   }
 
   dynamic "ingress" {
-    for_each = var.ingress_security_group_id
+    for_each = var.ingress_security_group_id == null ? [var.ingress_security_group_id] : []
     content {
       from_port   = 0
       to_port     = 0
       protocol    = "tcp"
-      security_groups = [var.ingress_security_group_id]
+      security_groups = [ingress.value]
     }
   }
 
