@@ -54,7 +54,7 @@ resource "aws_security_group" "minikube" {
     content {
       from_port   = 0
       to_port     = 0
-      protocol    = "tcp"
+      protocol    = "-1"
       security_groups = [ingress.value]
     }
   }
