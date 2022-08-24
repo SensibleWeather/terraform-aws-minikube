@@ -19,6 +19,12 @@ module "kubeadm-token" {
 # Security Group
 #####
 
+data "aws_lb" "ingress" {
+  tags = {
+    format("kubernetes.io/cluster/%v", var.cluster_name) = "owned"
+  }
+}
+
 data "aws_subnet" "minikube_subnet" {
   id = var.aws_subnet_id
 }
@@ -47,6 +53,13 @@ resource "aws_security_group" "minikube" {
     to_port     = 6443
     protocol    = "tcp"
     cidr_blocks = [var.api_access_cidr]
+  }
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "tcp"
+    security_groups = data.aws_lb.ingress.security_groups
   }
 
   egress {
