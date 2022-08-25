@@ -72,7 +72,7 @@ resource "aws_security_group" "minikube" {
 #####
 
 resource "aws_iam_policy" "minikube_policy" {
-  name        = var.cluster_name
+  name        = "voila-${var.cluster_name}"
   path        = "/"
   description = "Policy for role ${var.cluster_name}"
   policy      = file("${path.module}/template/policy.json.tpl")

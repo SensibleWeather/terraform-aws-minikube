@@ -196,3 +196,5 @@ do
   kubectl apply -f /tmp/addon.yaml
   rm /tmp/addon.yaml
 done
+
+touch /tmp/finished.txt
