@@ -27,3 +27,7 @@ output "kubeconfig_ip" {
   value       = "/home/centos/kubeconfig_ip"
 }
 
+output "instance_id" {
+  description = "Instance ID of the Minikube"
+  value = aws_instance.minikube.id
+}
