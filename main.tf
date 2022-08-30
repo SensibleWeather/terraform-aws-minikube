@@ -76,6 +76,12 @@ resource "aws_iam_policy" "minikube_policy" {
   path        = "/"
   description = "Policy for role ${var.cluster_name}"
   policy      = file("${path.module}/template/policy.json.tpl")
+
+  tags = {
+    Name = var.cluster_name
+    Env = "dev"
+    Resource = "voila"
+  }
 }
 
 resource "aws_iam_role" "minikube_role" {
@@ -97,6 +103,11 @@ resource "aws_iam_role" "minikube_role" {
 }
 EOF
 
+  tags = {
+    Name = var.cluster_name
+    Env = "dev"
+    Resource = "voila"
+  }
 }
 
 resource "aws_iam_policy_attachment" "minikube-attach" {
@@ -108,6 +119,11 @@ resource "aws_iam_policy_attachment" "minikube-attach" {
 resource "aws_iam_instance_profile" "minikube_profile" {
   name = var.cluster_name
   role = aws_iam_role.minikube_role.name
+  tags = {
+    Name = var.cluster_name
+    Env = "dev"
+    Resource = "voila"
+  }
 }
 
 ##########
