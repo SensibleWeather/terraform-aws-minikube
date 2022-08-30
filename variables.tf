@@ -64,3 +64,8 @@ variable ingress_security_group_id {
   description = "ID of the security group for ingress"
   default = null
 }
+
+variable "allowed_ips" {
+  description = "Additional allowed IPs"
+  default = []
+}

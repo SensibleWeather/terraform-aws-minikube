@@ -39,7 +39,7 @@ resource "aws_security_group" "minikube" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [var.ssh_access_cidr]
+    cidr_blocks = concat([var.ssh_access_cidr], var.allowed_ips)
   }
 
   ingress {
@@ -114,6 +114,16 @@ resource "aws_iam_policy_attachment" "minikube-attach" {
   name = "minikube-attachment"
   roles = [aws_iam_role.minikube_role.name]
   policy_arn = aws_iam_policy.minikube_policy.arn
+}
+
+data "aws_iam_policy" "ssm-policy" {
+  name = "AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_policy_attachment" "minikube-attach-ssm" {
+  name = "minikube-attachment-ssm"
+  roles = [aws_iam_role.minikube_role.name]
+  policy_arn = data.aws_iam_policy.ssm-policy.arn
 }
 
 resource "aws_iam_instance_profile" "minikube_profile" {

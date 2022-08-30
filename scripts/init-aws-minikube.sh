@@ -64,6 +64,11 @@ sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.t
 systemctl restart containerd
 systemctl enable containerd
 
+# Install SSM Agent
+sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+sudo systemctl enable amazon-ssm-agent
+sudo systemctl status amazon-ssm-agent
+
 ########################################
 ########################################
 # Install Kubernetes components
