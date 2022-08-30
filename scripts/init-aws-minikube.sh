@@ -155,8 +155,8 @@ kubeadm init --config /tmp/kubeadm.yaml
 export KUBECONFIG=/etc/kubernetes/admin.conf
 
 # Install calico
-kubectl create -f https://raw.githubusercontent.com/scholzj/terraform-aws-minikube/master/calico/calico-operator.yaml
-kubectl create -f https://raw.githubusercontent.com/scholzj/terraform-aws-minikube/master/calico/calico-cr.yaml
+kubectl create -f https://raw.githubusercontent.com/SensibleWeather/terraform-aws-minikube/master/calico/calico-operator.yaml
+kubectl create -f https://raw.githubusercontent.com/SensibleWeather/terraform-aws-minikube/master/calico/calico-cr.yaml
 
 # Allow all apps to run on master
 kubectl taint nodes --all node-role.kubernetes.io/master-
