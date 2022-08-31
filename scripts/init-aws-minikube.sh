@@ -140,6 +140,8 @@ clusterName: kubernetes
 controllerManager:
   extraArgs:
     cloud-provider: aws
+    cluster-signing-cert-file: /etc/kubernetes/pki/ca.crt
+    cluster-signing-key-file: /etc/kubernetes/pki/ca.key
 dns: {}
 etcd:
   local:
