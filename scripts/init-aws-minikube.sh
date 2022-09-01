@@ -134,6 +134,10 @@ apiServer:
     - $FULL_HOSTNAME
   extraArgs:
     cloud-provider: aws
+    service-account-key-file: sa-signer-pkcs8.pub
+    service-account-signing-key-file: sa-signer.key
+    api-audiences: sts.amazonaws.com
+    service-account-issuer: https://sensible-dev-cluster-oidc-provider.s3.amazonaws.com
   timeoutForControlPlane: 5m0s
 certificatesDir: /etc/kubernetes/pki
 clusterName: kubernetes
