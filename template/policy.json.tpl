@@ -25,7 +25,8 @@
                 "s3:GetBucket*",
                 "ssm:GetParameter",
                 "ssm:GetParameters",
-                "ssm:GetParametersByPath"
+                "ssm:GetParametersByPath",
+                "ssmmessages:CreateDataChannel"
                 ],
             "Resource": "*"
         }
