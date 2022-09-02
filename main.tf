@@ -72,7 +72,7 @@ resource "aws_security_group" "minikube" {
 #####
 
 resource "aws_iam_policy" "minikube_policy" {
-  name        = "voila-${var.cluster_name}"
+  name        = "${var.cluster_name}-policy"
   path        = "/"
   description = "Policy for role ${var.cluster_name}"
   policy      = file("${path.module}/template/policy.json.tpl")
@@ -85,7 +85,7 @@ resource "aws_iam_policy" "minikube_policy" {
 }
 
 resource "aws_iam_role" "minikube_role" {
-  name = var.cluster_name
+  name = "${var.cluster_name}-role"
 
   assume_role_policy = <<EOF
 {
@@ -127,7 +127,7 @@ resource "aws_iam_policy_attachment" "minikube-attach-ssm" {
 }
 
 resource "aws_iam_instance_profile" "minikube_profile" {
-  name = var.cluster_name
+  name = "${var.cluster_name}-profile"
   role = aws_iam_role.minikube_role.name
   tags = {
     Name = var.cluster_name
