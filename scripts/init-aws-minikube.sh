@@ -34,11 +34,32 @@ sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
 
 ########################################
 ########################################
-# Set may detach mounts for clean
-# termination
+# Set may detach mounts on startup for
+# clean termination
 ########################################
 ########################################
+cat <<EOF | tee /tmp/enable-may-detach-mounts.sh
+#!/bin/bash
 sudo /bin/sh -c 'echo 1 > /proc/sys/fs/may_detach_mounts'
+EOF
+
+chmod +x /tmp/enable-may-detach-mounts.sh
+
+cat <<EOF | tee /etc/systemd/system/detachmounts.service
+[Unit]
+Description=Set detach mounts to 1
+After=network.target
+[Service]
+Type=simple
+ExecStart=/tmp/enable-may-detach-mounts.sh
+TimeoutStartSec=0
+[Install]
+WantedBy=default.target
+EOF
+
+systemctl daemon-reload
+systemctl enable detachmounts.service
+systemctl start detachmounts.service
 
 ########################################
 ########################################
