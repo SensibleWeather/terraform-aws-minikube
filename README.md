@@ -8,27 +8,31 @@ AWS Minikube is a single node Kubernetes deployment in AWS. It creates EC2 host 
 - [Prerequisites and dependencies](#prerequisites-and-dependencies)
 - [Including the module](#including-the-module)
 - [Using custom AMI Image](#using-custom-ami-image)
-- [Add-ons](#addons)
-- [Custom add-ons](#custom-addons)
+- [Add-ons](#add-ons)
+- [Custom add-ons](#custom-add-ons)
 - [Tagging](#tagging)
+- [Kubernetes version](#kubernetes-version)
 
 <!-- /TOC -->
 
-## Updates
+## Updates
 
+* *31.3.2024* Update to Kubernetes 1.29.3 + Ingress and External DNS add-on updates
+* *18.2.2024* Update to Kubernetes 1.29.2 + Ingress add-on update
+* *30.12.2023* Update to Kubernetes 1.29.0
+* *26.11.2023* Update to Kubernetes 1.28.4
+* *12.11.2023* Update to Kubernetes 1.28.3 + Update some add-ons
+* *15.10.2023* Update to Kubernetes 1.28.2 + Update some add-ons
+* *16.4.2023* Update to Kubernetes 1.27.1 + Use external AWS Cloud Provider
+* *1.4.2023* Update to Kubernetes 1.26.3 + update add-ons (Ingress-NGINX Controller, External DNS, Metrics Server, AWS EBS CSI Driver)
+* *4.3.2023* Update to Kubernetes 1.26.2 + update add-ons (Ingress-NGINX Controller)
+* *22.1.2023* Update to Kubernetes 1.26.1 + update add-ons (External DNS)
+* *10.12.2022* Update to Kubernetes 1.26.0 + update add-ons (AWS EBS CSI Driver, Metrics server)
+* *13.11.2022* Update to Kubernetes 1.25.4 + update add-ons
+* *2.10.2022* Update to Kubernetes 1.25.2 + update add-ons
 * *26.8.2022* Update to Kubernetes 1.25.0 + Calico upgrade
-* *21.8.2022* Update to Kubernetes 1.24.4
-* *16.7.2022* Update to Kubernetes 1.24.3
-* *27.6.2022* Update to Kubernetes 1.24.2
-* *11.6.2022* Update to Kubernetes 1.24.1 + update add-ons + remove dependency on the template provider
-* *8.5.2022* Update to Kubernetes 1.24.0 + update add-ons
-* *23.3.2022* Update to Kubernetes 1.23.5 + update add-ons
-* *19.2.2022* Update to Kubernetes 1.23.4
-* *12.2.2022* Update to Kubernetes 1.23.2
-* *29.12.2021* Update to Kubernetes 1.23.1
-* *11.12.2021* Update to Kubernetes 1.23.0
 
-## Prerequisites and dependencies
+## Prerequisites and dependencies
 
 * AWS Minikube deploys into existing VPC / public subnet. If you don't have your VPC / subnet yet, you can use [this](https://github.com/scholzj/aws-vpc) configuration or [this](https://github.com/scholzj/terraform-aws-vpc) module to create one.
   * The VPC / subnet should be properly linked with Internet Gateway (IGW) and should have DNS and DHCP enabled.
@@ -67,7 +71,7 @@ module "minikube" {
 
 An example of how to include this can be found in the [examples](examples/) dir. 
 
-## Using custom AMI Image
+## Using custom AMI Image
 
 AWS Minikube is built and tested on CentOS 7. But gives you the possibility to use their own AMI images. Your custom AMI image should be based on RPM distribution and should be similar to Cent OS 7. When `ami_image_id` variable is not specified, the latest available CentOS 7 image will be used.
 
@@ -89,3 +93,7 @@ Custom add-ons can be added if needed. Fro every URL in the `addons` list, the i
 ## Tagging
 
 If you need to tag resources created by your Kubernetes cluster (EBS volumes, ELB load balancers etc.) check [this AWS Lambda function which can do the tagging](https://github.com/scholzj/aws-kubernetes-tagging-lambda).
+
+## Kubernetes version
+
+The intent for this module is to use it for development and testing against the latest version of Kubernetes. As such, the primary goal for this module is to ensure it works with whatever is the latest version of Kubernetes supported by Minikube. This includes provisioning the cluster as well as setting up networking and any of the [supported add-ons](#add-ons). This module might, but is not guaranteed to, also work with other versions of Kubernetes. At your own discretion, you can use the `kubernetes_version` variable to specify a different version of Kubernetes for the Minikube cluster.

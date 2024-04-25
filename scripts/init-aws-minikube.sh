@@ -11,7 +11,7 @@ export DNS_NAME=${dns_name}
 export IP_ADDRESS=${ip_address}
 export CLUSTER_NAME=${cluster_name}
 export ADDONS="${addons}"
-export KUBERNETES_VERSION="1.25.0"
+export KUBERNETES_VERSION="${kubernetes_version}"
 
 # Set this only after setting the defaults
 set -o nounset
@@ -103,15 +103,14 @@ sudo systemctl status amazon-ssm-agent
 # Install Kubernetes components
 ########################################
 ########################################
-sudo cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+sudo cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
-baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.29/rpm/
 enabled=1
-gpgcheck=0
-repo_gpgcheck=0
-gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-exclude=kubelet kubeadm kubectl
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.29/rpm/repodata/repomd.xml.key
+exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
 EOF
 
 yum install -y kubelet-$KUBERNETES_VERSION kubeadm-$KUBERNETES_VERSION kubernetes-cni --disableexcludes=kubernetes
@@ -143,7 +142,7 @@ nodeRegistration:
   imagePullPolicy: IfNotPresent
   kubeletExtraArgs:
     cgroup-driver: systemd
-    cloud-provider: aws
+    cloud-provider: external
     read-only-port: "10255"
   name: $FULL_HOSTNAME
   taints:
@@ -162,13 +161,13 @@ apiServer:
     - $LOCAL_IP_ADDRESS
     - $FULL_HOSTNAME
   extraArgs:
-    cloud-provider: aws
+    cloud-provider: external
   timeoutForControlPlane: 5m0s
 certificatesDir: /etc/kubernetes/pki
 clusterName: kubernetes
 controllerManager:
   extraArgs:
-    cloud-provider: aws
+    cloud-provider: external
 dns: {}
 etcd:
   local:
@@ -191,6 +190,18 @@ export KUBECONFIG=/etc/kubernetes/admin.conf
 # Install calico
 kubectl create -f https://raw.githubusercontent.com/SensibleWeather/terraform-aws-minikube/master/calico/calico-operator.yaml
 kubectl create -f https://raw.githubusercontent.com/SensibleWeather/terraform-aws-minikube/master/calico/calico-cr.yaml
+
+# Instal AWS Cloud Provider
+kubectl create -f https://raw.githubusercontent.com/scholzj/terraform-aws-minikube/master/aws-cloud-provider/aws-cloud-provider.yaml
+
+# Wait for the AWS Cloud Provider to be running
+while [[ $(kubectl get pod -l k8s-app=aws-cloud-controller-manager -n kube-system -o name | wc -c) -eq 0 ]]; do
+   echo "Waiting for cloud manager"
+   sleep 1
+done
+
+AWS_CLOUD_PROVIDER_POD=$(kubectl get pod -l k8s-app=aws-cloud-controller-manager -n kube-system -o name)
+kubectl wait $AWS_CLOUD_PROVIDER_POD -n kube-system --for=condition=Ready --timeout=300s
 
 # Allow all apps to run on master
 kubectl taint nodes --all node-role.kubernetes.io/master-
