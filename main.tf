@@ -169,11 +169,6 @@ data "aws_ami" "centos7" {
   owners = ["aws-marketplace"]
 
   filter {
-    name = "product-code"
-    values = ["aw0evgkw8e5c1q413zgy5pjce", "cvugziknvmxgqna9noibqnnsy"]
-  }
-
-  filter {
     name = "architecture"
     values = ["x86_64"]
   }
